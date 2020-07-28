@@ -27,10 +27,10 @@ class AssetsVersionTest extends TestCase
     public function provideContentWithAssets(): array
     {
         return [
-            ["foo", __DIR__ . '/stubs/assets', "foo"],
+            ["foo", __DIR__ . '/stubs', "foo"],
             [
                 file_get_contents(__DIR__ . '/stubs/blog.draciodkaz.cz.html'),
-                __DIR__ . '/stubs/assets',
+                __DIR__ . '/stubs',
                 file_get_contents(__DIR__ . '/stubs/expected.blog.draciodkaz.cz.html'),
             ],
         ];

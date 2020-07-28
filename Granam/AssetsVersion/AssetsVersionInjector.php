@@ -30,7 +30,7 @@ class AssetsVersionInjector extends StrictObject
         $stringsWithLinks = \array_merge($sourceMatches['sources'] ?? [], $urlMatches['urls'] ?? []);
         $replacedContent = $content;
         foreach ($stringsWithLinks as $stringWithLink) {
-            $maybeQuotedLink = \preg_replace('~src|url\(([^)]+)\)~', '$1', $stringWithLink);
+            $maybeQuotedLink = \preg_replace(['~url\(([^)]+)\)~', '~src="([^"]+)"~', "~src='([^']+)'~"], '$1', $stringWithLink);
             $link = \trim($maybeQuotedLink, '"\'');
             $md5 = $this->getFileMd5($link, $assetsRootDir);
             if (!$md5) {
