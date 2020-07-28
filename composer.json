@@ -1,0 +1,19 @@
+{
+    "name": "granam/assets-version",
+    "require": {
+        "php": "^7.2",
+        "granam/strict-object": "^3.0"
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Granam\\": "Granam",
+            "Granam\\AssetsVersion\\Tests": "tests"
+        }
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9.2"
+    }
+}
