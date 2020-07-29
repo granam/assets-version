@@ -1,5 +1,6 @@
 {
     "name": "granam/assets-version",
+    "license": "MIT",
     "require": {
         "php": "^7.2",
         "granam/strict-object": "^3.0"
