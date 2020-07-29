@@ -30,7 +30,7 @@ class AssetsVersionInjector extends StrictObject
             return $content; // nothing to change
         }
         $anchorsToFiles = array_filter($anchorMatches['anchors'] ?? [], static function (string $anchor) {
-            return preg_match('~[.][[:alnum:]]+(\?.*)?[\'"]?$~', $anchor);
+            return preg_match('~[.][[:alnum:]]+([?].*)?(#.*)?[\'"]?$~', $anchor);
         });
         $stringsWithLinks = \array_merge($sourceMatches['sources'] ?? [], $anchorsToFiles, $urlMatches['urls'] ?? []);
         $replacedContent = $content;
@@ -122,17 +122,18 @@ class AssetsVersionInjector extends StrictObject
             $newQueryChunks[] = \urlencode($name) . '=' . \urlencode($value);
         }
         $versionedQuery = \implode('&', $newQueryChunks);
-        $fragment = '';
         if (($parsed['fragment'] ?? '') !== '') {
-            $fragment .= '#' . $parsed['fragment'];
-        }
-        if ($fragment !== '') {
-            $versionedQuery .= '#' . $fragment;
+            $versionedQuery .= '#' . $parsed['fragment'];
         }
         $withoutQuery = $link;
         $queryStartsAt = \strpos($link, '?');
         if ($queryStartsAt !== false) {
             $withoutQuery = \substr($link, 0, $queryStartsAt);
+        } else {
+            $fragmentStartsAt = \strpos($link, '#');
+            if ($fragmentStartsAt !== false) {
+                $withoutQuery = \substr($link, 0, $fragmentStartsAt);
+            }
         }
 
         return $withoutQuery . '?' . $versionedQuery;
