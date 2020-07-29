@@ -22,15 +22,28 @@ class AssetsVersionInjector extends StrictObject
 
     public function addVersionsToAssetLinks(string $content, string $assetsRootDir): string
     {
-        $srcFound = \preg_match_all('~(?<sources>(?:src="[^"]+"|src=\'[^\']+\'))~', $content, $sourceMatches);
+        $regexpLocalLink = '(?!.*(?:(?:https?:)?//)|\w+:)';
+        $srcFound = \preg_match_all('~(?<sources>(?:src="' . $regexpLocalLink . '[^"]+"|src=\'' . $regexpLocalLink . '[^\']+\'))~', $content, $sourceMatches);
+        $anchorFound = \preg_match_all('~(?<anchors>(?:href="' . $regexpLocalLink . '[^"]+"|href=\'' . $regexpLocalLink . '[^\']+\'))~', $content, $anchorMatches);
         $urlFound = \preg_match_all('~(?<urls>(?:url\((?:(?<!data:)[^)])+\)|url\("(?:(?<!data:)[^)])+"\)|url\(\'(?:(?!data:)[^)])+\'\)))~', $content, $urlMatches);
-        if (!$srcFound && !$urlFound) {
+        if (!$srcFound && !$anchorFound && !$urlFound) {
             return $content; // nothing to change
         }
-        $stringsWithLinks = \array_merge($sourceMatches['sources'] ?? [], $urlMatches['urls'] ?? []);
+        $anchorsToFiles = array_filter($anchorMatches['anchors'] ?? [], static function (string $anchor) {
+            return preg_match('~[.][[:alnum:]]+(\?.*)?[\'"]?$~', $anchor);
+        });
+        $stringsWithLinks = \array_merge($sourceMatches['sources'] ?? [], $anchorsToFiles, $urlMatches['urls'] ?? []);
         $replacedContent = $content;
+        $elements = ['src', 'href'];
+        $quotes = ['"', "'"];
+        $elementRegexps = ['~url\(([^)]+)\)~'];
+        foreach ($elements as $element) {
+            foreach ($quotes as $quote) {
+                $elementRegexps[] = "~{$element}=({$quote}[^{$quote}]+{$quote})~";
+            }
+        }
         foreach ($stringsWithLinks as $stringWithLink) {
-            $maybeQuotedLink = \preg_replace(['~url\(([^)]+)\)~', '~src="([^"]+)"~', "~src='([^']+)'~"], '$1', $stringWithLink);
+            $maybeQuotedLink = \preg_replace($elementRegexps, '$1', $stringWithLink);
             $link = \trim($maybeQuotedLink, '"\'');
             $md5 = $this->getFileMd5($link, $assetsRootDir);
             if (!$md5) {
@@ -58,9 +71,12 @@ class AssetsVersionInjector extends StrictObject
         }
 
         $file = $assetsRootDir . '/' . \ltrim($localPath, '/');
+        if (!\is_readable($file)) {
+            $this->reportProblem("Can not read asset file {$file} figured from link '{$link}' and its path {$parts['path']}", $this->notFoundAssetFileReport);
+        }
         $md5Sum = \md5_file($file);
         if ($md5Sum === false) {
-            $this->reportProblem("Can not read asset file {$file} figured from link '{$parts['path']}", $this->notFoundAssetFileReport);
+            $this->reportProblem("Can not read asset file {$file} figured from link '{$link}' and {$parts['path']}", $this->notFoundAssetFileReport);
             return null;
         }
 

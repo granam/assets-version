@@ -11,22 +11,22 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
 
 
-    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?version=c730981b91ea116e7c562e47d9a184d1"/>
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?version=c730981b91ea116e7c562e47d9a184d1"/><!--invalid version, should be fixed-->
 
-    <link rel="alternate" type="application/rss+xml" title="Dračí odkaz Blog RSS" href="/rss.xml">
+    <link rel="alternate" type="application/rss+xml" title="Dračí odkaz Blog RSS" href="/rss.xml?foo=bar&baz%5Bqux%5D=foobar&version=7f36546c120b5cedecdbf1428d380c70"><!--query parameters-->
 
-    <link href="/assets/fonts/Open_Sans-300_400_700-2020-07-24.css" rel="stylesheet">
+    <link href="/assets/fonts/Open_Sans-300_400_700-2020-07-24.css?version=2e595f8b5f9da3bd85af927bc3d2274a#foo" rel="stylesheet"><!--hash-->
 
-    <link href="/assets/font-awesome.5.0.13/css/fontawesome-all.min.css" rel="stylesheet">
+    <link href="/assets/font-awesome.5.0.13/css/fontawesome-all.min.css?version=d61bfe9b56c13ecff5313ee3abb45e8b#foo#bar" rel="stylesheet"><!--double hash-->
 
-    <link href="/assets/bootstrap-4.0.0/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+    <link href="/assets/bootstrap-4.0.0/bootstrap.min.css?version=450fc463b8b1a349df717056fbb3e078" rel="stylesheet" type="text/css"/>
 
-    <link href="/assets/prism-1.15.0/prism.css" rel="stylesheet" type="text/css"/>
+    <link href="/assets/prism-1.15.0/prism.css?version=030f44af15be7aed79d1037c42cc86b2" rel="stylesheet" type="text/css"/>
 
     <link href="/assets/css/style.css?version=f395e65bcd4671fc77ce01c521c9e29a" rel="stylesheet" type="text/css"/>
     <link href="/assets/css/perex.css?version=7ace2a8e3e0501c9539760a0e08d9378" rel="stylesheet" type="text/css"/>
 
-    <link href="/assets/gifplayer-0.3.3/gifplayer.css" rel="stylesheet" type="text/css"/>
+    <link href="/assets/gifplayer-0.3.3/gifplayer.css?version=f923f1dda28e2055d4fcd14c12f3c084" rel="stylesheet" type="text/css"/>
 
     <link href="/assets/css/checklist.css?version=e49b5e8dd3b20c52a0236bd09219c07d" rel="stylesheet" type="text/css"/>
 
@@ -49,7 +49,7 @@
             </a>
           </li>
           <li>
-            <a href="/rss.xml"><img src="/assets/images/Rss-feed.svg?version=8f3006d17f42123587e1df838d6696da" alt="RSS feed" class="inline-image"></a>
+            <a href="/rss.xml?version=7f36546c120b5cedecdbf1428d380c70"><img src="/assets/images/Rss-feed.svg?version=8f3006d17f42123587e1df838d6696da" alt="RSS feed" class="inline-image"></a>
           </li>
           <li id="top-menu-search" class="hidden-xs-down">
             <form method="get" action="https://www.google.com/search" itemprop="potentialAction" itemscope=""
@@ -131,8 +131,8 @@
       </div>
     </div>
 
-    <script src="/assets/js/jquery-3.3.1.slim.min.js"></script>
-    <script src="/assets/gifplayer-0.3.3/jquery.gifplayer.js"></script>
+    <script src="/assets/js/jquery-3.3.1.slim.min.js?version=99b0a83cf1b0b1e2cb16041520e87641"></script>
+    <script src="/assets/gifplayer-0.3.3/jquery.gifplayer.js?version=8d83dee669477484193099b958888020"></script>
     <script src="/assets/js/cluster-checklist.js?version=53ec840d68a5e8bd245b5f3106ea6f60" defer></script>
     <script src="/assets/js/cluster-expanable.js?version=302b679c4bbc0896aed86946b36c9272" defer></script>
 
@@ -142,15 +142,17 @@
         }
         ga.q = []
         ga.l = +new Date()
-        ga(\'create\', \' UA-121206931-15\', \'auto\');
-        ga(\'send\',\'pageview\');
+        ga('create', ' UA-121206931-15', 'auto');
+        ga('send','pageview');
     </script>
     <script src="https://www.google-analytics.com/analytics.js" async></script>
+    <script src="http://www.google-analytics.com/analytics.js" async></script><!--HTTP protocol-->
+    <script src="//www.google-analytics.com/analytics.js" async></script><!--reused protocol-->
 
-    <script src="/assets/prism-1.15.0/prism.js" defer></script>
+    <script src="/assets/prism-1.15.0/prism.js?version=5ee2510329bb5c6cac4c8e9796496f13" defer></script>
 
     <script async defer>
-        $(\'.gifplayer\').gifplayer();
+        $('.gifplayer').gifplayer();
     </script>
 
     <div class="text-center mt-5" id="footer">

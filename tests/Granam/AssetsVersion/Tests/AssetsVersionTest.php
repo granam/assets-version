@@ -5,7 +5,7 @@ namespace Granam\AssetsVersion\Tests;
 use Granam\AssetsVersion\AssetsVersionInjector;
 use PHPUnit\Framework\TestCase;
 
-class AssetsVersionTest extends TestCase
+class AssetsVersionInjectorTest extends TestCase
 {
     /**
      * @test
@@ -27,7 +27,6 @@ class AssetsVersionTest extends TestCase
     public function provideContentWithAssets(): array
     {
         return [
-            ["foo", __DIR__ . '/stubs', "foo"],
             [
                 file_get_contents(__DIR__ . '/stubs/blog.draciodkaz.cz.html'),
                 __DIR__ . '/stubs',

@@ -11,13 +11,13 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
 
 
-    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?version=c730981b91ea116e7c562e47d9a184d1"/>
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?version=invalid"/><!--invalid version, should be fixed-->
 
-    <link rel="alternate" type="application/rss+xml" title="Dračí odkaz Blog RSS" href="/rss.xml">
+    <link rel="alternate" type="application/rss+xml" title="Dračí odkaz Blog RSS" href="/rss.xml?foo=bar&baz[qux]=foobar"><!--query parameters-->
 
-    <link href="/assets/fonts/Open_Sans-300_400_700-2020-07-24.css" rel="stylesheet">
+    <link href="/assets/fonts/Open_Sans-300_400_700-2020-07-24.css#foo" rel="stylesheet"><!--hash-->
 
-    <link href="/assets/font-awesome.5.0.13/css/fontawesome-all.min.css" rel="stylesheet">
+    <link href="/assets/font-awesome.5.0.13/css/fontawesome-all.min.css#foo#bar" rel="stylesheet"><!--double hash-->
 
     <link href="/assets/bootstrap-4.0.0/bootstrap.min.css" rel="stylesheet" type="text/css"/>
 
@@ -142,15 +142,17 @@
         }
         ga.q = []
         ga.l = +new Date()
-        ga(\'create\', \' UA-121206931-15\', \'auto\');
-        ga(\'send\',\'pageview\');
+        ga('create', ' UA-121206931-15', 'auto');
+        ga('send','pageview');
     </script>
     <script src="https://www.google-analytics.com/analytics.js" async></script>
+    <script src="http://www.google-analytics.com/analytics.js" async></script><!--HTTP protocol-->
+    <script src="//www.google-analytics.com/analytics.js" async></script><!--reused protocol-->
 
     <script src="/assets/prism-1.15.0/prism.js" defer></script>
 
     <script async defer>
-        $(\'.gifplayer\').gifplayer();
+        $('.gifplayer').gifplayer();
     </script>
 
     <div class="text-center mt-5" id="footer">
