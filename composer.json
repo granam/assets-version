@@ -15,7 +15,7 @@
     "autoload": {
         "psr-4": {
             "Granam\\": "Granam",
-            "Granam\\AssetsVersion\\Tests": "tests"
+            "Granam\\AssetsVersion\\Tests\\": "tests"
         }
     },
     "config": {
