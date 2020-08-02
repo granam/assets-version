@@ -12,6 +12,9 @@ class AssetsVersionInjector extends StrictObject
     public const PROBLEM_REPORT_AS_WARNING = 'warning';
     public const PROBLEM_REPORT_AS_EXCEPTION = 'exception';
 
+    public const NO_ADDITIONAL_INFO_IN_CASE_OF_ORDER = "";
+    public const NO_REGEXP_TO_EXCLUDE_LINKS = "";
+
     /** @var string */
     private $notFoundAssetFileReport;
 
@@ -20,7 +23,12 @@ class AssetsVersionInjector extends StrictObject
         $this->notFoundAssetFileReport = $problemReport;
     }
 
-    public function addVersionsToAssetLinks(string $content, string $assetsRootDir, string $additionalInfoInCaseOfError = ""): string
+    public function addVersionsToAssetLinks(
+        string $content,
+        string $assetsRootDir,
+        string $regexpToExcludeLinks = self::NO_REGEXP_TO_EXCLUDE_LINKS,
+        string $additionalInfoInCaseOfError = self::NO_ADDITIONAL_INFO_IN_CASE_OF_ORDER
+    ): string
     {
         $regexpLocalLink = '(?!.*(?:(?:https?:)?//)|\w+:)';
         $srcFound = preg_match_all('~(?<sources>(?:src="' . $regexpLocalLink . '[^"]+"|src=\'' . $regexpLocalLink . '[^\']+\'))~', $content, $sourceMatches);
@@ -45,6 +53,9 @@ class AssetsVersionInjector extends StrictObject
         foreach ($stringsWithLinks as $stringWithLink) {
             $maybeQuotedLink = preg_replace($elementRegexps, '$1', $stringWithLink);
             $link = trim($maybeQuotedLink, '"\'');
+            if ($regexpToExcludeLinks !== self::NO_REGEXP_TO_EXCLUDE_LINKS && preg_match($regexpToExcludeLinks, $link)) {
+                continue;
+            }
             $md5 = $this->getFileMd5($link, $assetsRootDir, $additionalInfoInCaseOfError);
             if (!$md5) {
                 continue;
@@ -85,7 +96,7 @@ class AssetsVersionInjector extends StrictObject
 
     private function reportProblem(string $problem, string $additionalInfoInCaseOfError, string $reportType): void
     {
-        if ($additionalInfoInCaseOfError !== "") {
+        if ($additionalInfoInCaseOfError !== self::NO_ADDITIONAL_INFO_IN_CASE_OF_ORDER) {
             $problem .= ' ' . $additionalInfoInCaseOfError;
         }
         switch ($reportType) {

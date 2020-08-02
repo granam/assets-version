@@ -13,12 +13,13 @@ class AssetsVersionInjectorTest extends TestCase
      * @dataProvider provideContentWithAssets
      * @param string $content
      * @param string $assetsRootDir
+     * @param string $excludingRegexp
      * @param string $expectedResult
      */
-    public function Asset_version_is_added(string $content, string $assetsRootDir, string $expectedResult): void
+    public function Asset_version_is_added(string $content, string $assetsRootDir, string $excludingRegexp, string $expectedResult): void
     {
         $assetsVersionInjector = new AssetsVersionInjector();
-        $contentWithVersions = $assetsVersionInjector->addVersionsToAssetLinks($content, $assetsRootDir);
+        $contentWithVersions = $assetsVersionInjector->addVersionsToAssetLinks($content, $assetsRootDir, $excludingRegexp);
         self::assertSame($expectedResult, $contentWithVersions);
     }
 
@@ -28,6 +29,7 @@ class AssetsVersionInjectorTest extends TestCase
             [
                 file_get_contents(__DIR__ . '/stubs/blog.draciodkaz.cz.html'),
                 __DIR__ . '/stubs',
+                '~\d+[.]\d+[.]\d+~', // exclude version-like links
                 file_get_contents(__DIR__ . '/stubs/expected.blog.draciodkaz.cz.html'),
             ],
         ];
@@ -47,6 +49,9 @@ class AssetsVersionInjectorTest extends TestCase
         $assetsVersionInjector->addVersionsToAssetLinks(<<<HTML
 <link type="text/css" href="$nonExistingFile">
 HTML
-            , __DIR__, $uniqueAdditionalInfo);
+            , __DIR__,
+            '',
+            $uniqueAdditionalInfo
+        );
     }
 }
