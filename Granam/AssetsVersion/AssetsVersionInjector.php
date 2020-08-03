@@ -81,6 +81,7 @@ class AssetsVersionInjector extends StrictObject
             return null;
         }
 
+        $localPath = urldecode($localPath);
         $file = $assetsRootDir . '/' . ltrim($localPath, '/');
         if (!is_readable($file)) {
             $this->reportProblem("Can not read asset file {$file} figured from link '{$link}' and its path {$parts['path']}", $additionalInfoInCaseOfError, $this->notFoundAssetFileReport);
