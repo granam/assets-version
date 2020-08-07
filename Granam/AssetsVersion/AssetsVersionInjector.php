@@ -30,9 +30,21 @@ class AssetsVersionInjector extends StrictObject
         string $additionalInfoInCaseOfError = self::NO_ADDITIONAL_INFO_IN_CASE_OF_ORDER
     ): string
     {
-        $regexpLocalLink = '(?!.*(?:(?:https?:)?//)|\w+:)';
-        $srcFound = preg_match_all('~(?<sources>(?:src="' . $regexpLocalLink . '[^"]+"|src=\'' . $regexpLocalLink . '[^\']+\'))~', $content, $sourceMatches);
-        $anchorFound = preg_match_all('~(?<anchors>(?:href="' . $regexpLocalLink . '[^"]+"|href=\'' . $regexpLocalLink . '[^\']+\'))~', $content, $anchorMatches);
+        $regexpLocalLink = '(?!(?://|https?:|#|\w+:))';
+        $quotes = ['"', "'"];
+        $sourceRegexpParts = [];
+        $anchorRegexpParts = [];
+        foreach ($quotes as $quote) {
+            // like "src='$regexpLocalLink[^']+'"
+            $sourceRegexpParts[] = "src=${quote}{$regexpLocalLink}[^{$quote}]+{$quote}";
+            $anchorRegexpParts[] = "href=${quote}{$regexpLocalLink}[^{$quote}]+{$quote}";
+        }
+        $sourceRegexp = implode('|', $sourceRegexpParts);
+        $srcFound = preg_match_all("~(?<sources>(?:{$sourceRegexp}))~", $content, $sourceMatches);
+
+        $anchorRegexp = implode('|', $anchorRegexpParts);
+        $anchorFound = preg_match_all("~(?<anchors>(?:{$anchorRegexp}))~", $content, $anchorMatches);
+
         $urlFound = preg_match_all('~(?<urls>(?:url\((?:(?<!data:)[^)])+\)|url\("(?:(?<!data:)[^)])+"\)|url\(\'(?:(?!data:)[^)])+\'\)))~', $content, $urlMatches);
         if (!$srcFound && !$anchorFound && !$urlFound) {
             return $content; // nothing to change
@@ -43,7 +55,6 @@ class AssetsVersionInjector extends StrictObject
         $stringsWithLinks = array_merge($sourceMatches['sources'] ?? [], $anchorsToFiles, $urlMatches['urls'] ?? []);
         $replacedContent = $content;
         $elements = ['src', 'href'];
-        $quotes = ['"', "'"];
         $elementRegexps = ['~url\(([^)]+)\)~'];
         foreach ($elements as $element) {
             foreach ($quotes as $quote) {
