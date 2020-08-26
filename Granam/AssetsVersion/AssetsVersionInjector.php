@@ -136,7 +136,9 @@ class AssetsVersionInjector extends StrictObject
             if ($queryChunk === '') {
                 continue;
             }
-            [$name, $value] = explode('=', $queryChunk);
+            $explodedQuery = explode('=', $queryChunk);
+            $name = $explodedQuery[0] ?? null;
+            $value = $explodedQuery[1] ?? null;
             $queryParts[$name] = $value;
         }
         if (!empty($queryParts[self::VERSION]) && $queryParts[self::VERSION] === $version) {
