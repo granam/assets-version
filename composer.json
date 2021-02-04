@@ -14,7 +14,11 @@
     },
     "autoload": {
         "psr-4": {
-            "Granam\\": "Granam",
+            "Granam\\AssetsVersion\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
             "Granam\\AssetsVersion\\Tests\\": "tests"
         }
     },
