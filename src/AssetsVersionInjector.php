@@ -7,6 +7,7 @@ use Granam\Strict\Object\StrictObject;
 class AssetsVersionInjector extends StrictObject
 {
     public const VERSION = 'version';
+
     public const PROBLEM_REPORT_AS_IGNORE = 'ignore';
     public const PROBLEM_REPORT_AS_NOTICE = 'notice';
     public const PROBLEM_REPORT_AS_WARNING = 'warning';

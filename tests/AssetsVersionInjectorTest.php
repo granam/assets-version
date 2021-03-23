@@ -26,7 +26,7 @@ class AssetsVersionInjectorTest extends TestCase
     public function provideContentWithAssets(): array
     {
         return [
-            [
+            'some content with assets' => [
                 file_get_contents(__DIR__ . '/stubs/blog.draciodkaz.cz.html'),
                 __DIR__ . '/stubs',
                 '~\d+[.]\d+[.]\d+~', // exclude version-like links
@@ -45,11 +45,17 @@ class AssetsVersionInjectorTest extends TestCase
         $assetsVersionInjector = new AssetsVersionInjector();
 
         $this->expectException(AssetsVersionParsingException::class);
-        $this->expectErrorMessageMatches(sprintf('~%s.* %s$~', preg_quote($nonExistingFile, '~'), preg_quote($uniqueAdditionalInfo, '~')));
+        $this->expectErrorMessageMatches(
+            sprintf(
+                '~%s.* %s$~',
+                preg_quote($nonExistingFile, '~'),
+                preg_quote($uniqueAdditionalInfo, '~')
+            )
+        );
         $assetsVersionInjector->addVersionsToAssetLinks(<<<HTML
 <link type="text/css" href="$nonExistingFile">
-HTML
-            , __DIR__,
+HTML,
+            __DIR__,
             '',
             $uniqueAdditionalInfo
         );

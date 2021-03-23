@@ -1,8 +1,8 @@
 # Assets version injector
 
-No more browser cache surprise, no more forced page reloads to get latest styles, images, javascripts...
+No more browser cache surprise, no more forced page reloads to get the latest styles, images, javascripts...
 
-*Give me a HTML page or just a chunk, I will give you that back with md5 sum appended to asset URLs as a "version".*
+*Give me HTML page or just a chunk, I will give you that back with md5 sum appended to asset URLs as a "version".*
 
 ```bash
 composer require granam/assets-version
