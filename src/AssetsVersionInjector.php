@@ -86,21 +86,20 @@ class AssetsVersionInjector extends StrictObject
 
     private function getFileMd5(string $link, string $assetsRootDir, string $additionalInfoInCaseOfError): ?string
     {
-        $parts = parse_url($link);
-        $localPath = $parts['path'] ?? '';
-        if ($localPath === '') {
+        $path = (string)parse_url($link, PHP_URL_PATH);
+        if ($path === '') {
             $this->reportProblem("Can not parse URL from link '{$link}", $additionalInfoInCaseOfError, $this->notFoundAssetFileReport);
             return null;
         }
 
-        $localPath = urldecode($localPath);
+        $localPath = urldecode($path);
         $file = $assetsRootDir . '/' . ltrim($localPath, '/');
         if (!is_readable($file)) {
-            $this->reportProblem("Can not read asset file {$file} figured from link '{$link}' and its path {$parts['path']}", $additionalInfoInCaseOfError, $this->notFoundAssetFileReport);
+            $this->reportProblem("Can not read asset file {$file} figured from link '{$link}' and its path {$path}", $additionalInfoInCaseOfError, $this->notFoundAssetFileReport);
         }
         $md5Sum = md5_file($file);
         if ($md5Sum === false) {
-            $this->reportProblem("Can not read asset file {$file} figured from link '{$link}' and {$parts['path']}", $additionalInfoInCaseOfError, $this->notFoundAssetFileReport);
+            $this->reportProblem("Can not read asset file {$file} figured from link '{$link}' and {$path}", $additionalInfoInCaseOfError, $this->notFoundAssetFileReport);
             return null;
         }
 
@@ -148,7 +147,13 @@ class AssetsVersionInjector extends StrictObject
         $queryParts[self::VERSION] = $version;
         $newQueryChunks = [];
         foreach ($queryParts as $name => $value) {
-            $newQueryChunks[] = urlencode($name) . '=' . urlencode($value);
+            if ($name === null) {
+                $newQueryChunks[] = urlencode($value);
+            } elseif ($value === null) {
+                $newQueryChunks[] = urlencode($name);
+            } else {
+                $newQueryChunks[] = urlencode($name) . '=' . urlencode($value);
+            }
         }
         $versionedQuery = implode('&', $newQueryChunks);
         if (($parsed['fragment'] ?? '') !== '') {
